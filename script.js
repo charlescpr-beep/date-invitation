@@ -383,7 +383,7 @@ function buildDateText() {
     .map((answer) => `${answer.label}: ${answer.value}`)
     .join(", ");
 
-  return `Hey 😎 Ich bin dabei! Lass uns unser Date planen ❤️\n\nMein Vorschlag: ${state.selectedType.title}${answerText ? `, ${answerText}` : ""}, ${daySelect.value} um ${timeSelect.value}.`;
+  return `Hey 😎 Ich bin dabei! Lass uns unser Date planen ❤️\n\nMein Vorschlag: ${state.selectedType.title}${answerText ? `\n ${answerText}` : ""} \n ${daySelect.value} um ${timeSelect.value}.`;
 }
 
 function openWhatsApp() {
