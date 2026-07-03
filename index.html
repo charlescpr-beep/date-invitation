@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050505">
+  <title>Date-Einladung</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <div class="sparkle-field" aria-hidden="true"></div>
+
+  <main class="app-shell">
+    <section class="screen active" id="startScreen" aria-labelledby="startTitle">
+      <div class="glass-panel intro-panel reveal">
+        <p class="eyebrow">Hey 😊</p>
+        <h1 id="startTitle">Ich möchte dir etwas fragen...</h1>
+        <button class="primary-btn pulse" id="startBtn" type="button">
+          <span>Los geht's</span>
+          <span aria-hidden="true">❤️</span>
+        </button>
+      </div>
+    </section>
+
+    <section class="screen" id="questionScreen" aria-labelledby="questionTitle">
+      <div class="glass-panel question-panel">
+        <p class="eyebrow">Eine sehr wichtige Frage</p>
+        <h2 id="questionTitle">Möchtest du mit mir auf ein Date gehen?</h2>
+        <p class="tease-message" id="teaseMessage" aria-live="polite"></p>
+        <div class="answer-area" id="answerArea">
+          <button class="primary-btn yes-btn" id="yesBtn" type="button">❤️ Ja</button>
+          <button class="ghost-btn no-btn" id="noBtn" type="button">🙈 Nein</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="successScreen" aria-labelledby="successTitle">
+      <div class="glass-panel success-panel">
+        <div class="success-icon" aria-hidden="true">🥳</div>
+        <h2 id="successTitle">Yeeeees!!</h2>
+        <p>Jetzt planen wir unser Date ❤️</p>
+        <button class="primary-btn" id="planBtn" type="button">
+          <i class="fa-solid fa-heart"></i>
+          Date planen
+        </button>
+      </div>
+    </section>
+
+    <section class="screen flow-screen" id="plannerScreen" aria-labelledby="plannerTitle">
+      <div class="planner">
+        <div class="planner-head reveal">
+          <p class="eyebrow">Date-Konfigurator</p>
+          <h2 id="plannerTitle">Worauf hast du Lust?</h2>
+          <div class="progress-bar" aria-hidden="true">
+            <span id="progressFill"></span>
+          </div>
+        </div>
+        <div class="cards-grid" id="dateTypeGrid" aria-label="Date-Typ auswählen"></div>
+        <div class="step-card glass-panel" id="optionStep" hidden>
+          <button class="icon-btn" id="backBtn" aria-label="Zurück">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <p class="eyebrow" id="stepEyebrow">Noch eine Sache</p>
+          <h3 id="stepQuestion"></h3>
+          <div class="choice-grid" id="choiceGrid"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="screen" id="summaryScreen" aria-labelledby="summaryTitle">
+      <div class="glass-panel summary-panel">
+        <p class="eyebrow">Fast fertig</p>
+        <h2 id="summaryTitle">❤️ Unser Date</h2>
+        <div class="summary-list" id="summaryList"></div>
+        <div class="date-picks">
+          <label>
+            <span>📅 Tag</span>
+            <select id="daySelect">
+              <option>Samstag</option>
+              <option>Freitag</option>
+              <option>Sonntag</option>
+              <option>Donnerstag</option>
+            </select>
+          </label>
+          <label>
+            <span>🕖 Uhrzeit</span>
+            <select id="timeSelect">
+              <option>19:00</option>
+              <option>18:00</option>
+              <option>20:00</option>
+              <option>16:00</option>
+              <option>14:00</option>
+            </select>
+          </label>
+        </div>
+        <button class="primary-btn wide-btn" id="confirmBtn" type="button">
+          <i class="fa-brands fa-whatsapp"></i>
+          Termin bestätigen
+        </button>
+        <button class="calendar-btn" id="calendarBtn" type="button">
+          <i class="fa-regular fa-calendar-plus"></i>
+          Zum Kalender hinzufügen
+        </button>
+      </div>
+    </section>
+
+    <section class="screen" id="finalScreen" aria-labelledby="finalTitle">
+      <div class="glass-panel final-panel">
+        <div class="heart-orbit" aria-hidden="true">
+          <span>❤️</span>
+          <span>💫</span>
+          <span>❤️</span>
+        </div>
+        <h2 id="finalTitle">Mission erfolgreich ❤️</h2>
+        <p>Ich freue mich schon darauf, dich zu sehen 😊</p>
+      </div>
+    </section>
+  </main>
+
+  <div class="confetti-layer" id="confettiLayer" aria-hidden="true"></div>
+  <div class="heart-layer" id="heartLayer" aria-hidden="true"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
