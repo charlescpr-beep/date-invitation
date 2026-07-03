@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#050505">
-  <title>Date-Einladung</title>
+  <title>Oui ou Oui ❤️</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -18,19 +18,36 @@
       <p id="lockMessage">Webseite wurde vorübergehend durch der owner "Charles Compaore" gesperrt</p>
     </div>
   </div>
+  <header class="site-header">
+    <button class="logo-button" id="logoButton" type="button">
+      <img src="logo1.png" alt="Logo Oui ou Oui" class="logo-image" />
+      <span class="logo-text"><strong>Oui ou Oui</strong> <span aria-hidden="true">❤️</span></span>
+    </button>
+  </header>
   <div class="ambient ambient-one"></div>
   <div class="ambient ambient-two"></div>
   <div class="sparkle-field" aria-hidden="true"></div>
 
   <main class="app-shell">
     <section class="screen active" id="startScreen" aria-labelledby="startTitle">
-      <div class="glass-panel intro-panel reveal">
-        <p class="eyebrow">Hey 😊</p>
-        <h1 id="startTitle">Ich möchte dir etwas fragen...</h1>
-        <button class="primary-btn pulse" id="startBtn" type="button">
-          <span>Los geht's</span>
-          <span aria-hidden="true">❤️</span>
+      <div class="glass-panel intro-panel reveal hero-panel">
+        <p class="eyebrow">Bienvenue</p>
+        <h1 id="startTitle">Oui ou Oui <span aria-hidden="true">❤️</span></h1>
+        <p class="hero-slogan">Weil das Nein heute leider keine Option ist. 😉</p>
+        <button class="primary-btn hero-btn" id="startBtn" type="button">
+          <span>❤️ Einladung erstellen</span>
         </button>
+        <div class="rating-card">
+          <span class="rating-label">Bewerte uns</span>
+          <div class="rating-stars" id="ratingStars">
+            <button type="button" class="star-btn" data-value="1" aria-label="1 Stern">★</button>
+            <button type="button" class="star-btn" data-value="2" aria-label="2 Sterne">★</button>
+            <button type="button" class="star-btn" data-value="3" aria-label="3 Sterne">★</button>
+            <button type="button" class="star-btn" data-value="4" aria-label="4 Sterne">★</button>
+            <button type="button" class="star-btn" data-value="5" aria-label="5 Sterne">★</button>
+          </div>
+          <p class="rating-message" id="ratingMessage">Wie gefällt dir Oui ou Oui?</p>
+        </div>
       </div>
     </section>
 
@@ -117,14 +134,24 @@
     </section>
 
     <section class="screen" id="finalScreen" aria-labelledby="finalTitle">
-      <div class="glass-panel final-panel">
-        <div class="heart-orbit" aria-hidden="true">
-          <span>❤️</span>
-          <span>💫</span>
-          <span>❤️</span>
+      <div class="glass-panel final-panel invite-result">
+        <div class="result-badge" aria-hidden="true">🎉</div>
+        <h2 id="finalTitle">Deine Einladung ist fertig!</h2>
+        <p class="result-copy">Teile deinen Link oder zeige den QR-Code vor.</p>
+        <div class="share-panel">
+          <div class="invite-link-card">
+            <label for="inviteLink">Einladungslink</label>
+            <a id="inviteLink" href="#" class="invite-link" target="_blank" rel="noreferrer"></a>
+          </div>
+          <div class="qr-card" aria-label="QR Code Einladung">
+            <img id="inviteQr" alt="QR-Code für Einladung" src="" />
+          </div>
         </div>
-        <h2 id="finalTitle">Mission erfolgreich ❤️</h2>
-        <p>Ich freue mich schon darauf, dich zu sehen 😊</p>
+        <div class="share-actions">
+          <button class="primary-btn" id="copyLinkBtn" type="button">📋 Link kopieren</button>
+          <button class="ghost-btn" id="shareLinkBtn" type="button">📤 Link teilen</button>
+        </div>
+        <p class="share-status" id="shareStatus"></p>
       </div>
     </section>
   </main>

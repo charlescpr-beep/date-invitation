@@ -27,6 +27,14 @@ const confirmBtn = document.querySelector("#confirmBtn");
 const calendarBtn = document.querySelector("#calendarBtn");
 const confettiLayer = document.querySelector("#confettiLayer");
 const heartLayer = document.querySelector("#heartLayer");
+const logoButton = document.querySelector("#logoButton");
+const inviteLinkEl = document.querySelector("#inviteLink");
+const inviteQrEl = document.querySelector("#inviteQr");
+const copyLinkBtn = document.querySelector("#copyLinkBtn");
+const shareLinkBtn = document.querySelector("#shareLinkBtn");
+const shareStatus = document.querySelector("#shareStatus");
+const ratingStars = Array.from(document.querySelectorAll(".star-btn"));
+const ratingMessage = document.querySelector("#ratingMessage");
 
 const playfulMessages = [
   "🤖 Fehler 404: Nein nicht gefunden.",
@@ -177,14 +185,74 @@ function hideLock() {
   appShell.style.pointerEvents = '';
   document.documentElement.style.overflow = '';
 }
+function setRating(value) {
+  ratingStars.forEach((star) => {
+    const starValue = Number(star.dataset.value);
+    if (starValue <= value) {
+      star.classList.add('active');
+      star.setAttribute('aria-pressed', 'true');
+    } else {
+      star.classList.remove('active');
+      star.setAttribute('aria-pressed', 'false');
+    }
+  });
+  ratingMessage.textContent = `Danke für deine ${value}-Sterne Bewertung!`;
+}
 
+function createInviteLink() {
+  const isLocalFile = window.location.protocol === 'file:';
+  const url = new URL(window.location.href);
+  url.searchParams.set('invite', 'oui-ou-oui');
+  url.hash = '';
+
+  if (isLocalFile) {
+    return `https://date-invitation-gilt.vercel.app/?invite=oui-ou-oui`;
+  }
+
+  return url.toString();
+}
+
+function updateInviteResult() {
+  const url = createInviteLink();
+  inviteLinkEl.href = url;
+  inviteLinkEl.textContent = url;
+  inviteQrEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&data=${encodeURIComponent(url)}`;
+}
+
+function copyInviteLink() {
+  const url = inviteLinkEl.href;
+  navigator.clipboard.writeText(url).then(() => {
+    shareStatus.textContent = 'Link kopiert!';
+  }).catch(() => {
+    shareStatus.textContent = 'Kopieren fehlgeschlagen. Bitte manuell kopieren.';
+  });
+}
+
+function shareInviteLink() {
+  const url = inviteLinkEl.href;
+  if (navigator.share) {
+    navigator.share({ title: 'Oui ou Oui Einladung', text: 'Meine Einladung ist fertig!', url })
+      .catch(() => {
+        shareStatus.textContent = 'Teilen wurde abgebrochen.';
+      });
+  } else {
+    copyInviteLink();
+    shareStatus.textContent = 'Teilen ist auf diesem Gerät nicht verfügbar. Link wurde kopiert.';
+  }
+}
 function initLockFromStorage() {
   try {
     const locked = localStorage.getItem('siteLocked');
     if (locked === 'true') {
-      const msg = localStorage.getItem('siteLockMessage') || 'Webseite wurde vorübergehend gesperrt';
-      const owner = localStorage.getItem('siteLockOwner') || 'CharlesCpr';
-      showLock(msg, owner);
+      const msg = localStorage.getItem('siteLockMessage');
+      const owner = localStorage.getItem('siteLockOwner');
+      if (!msg && !owner) {
+        // stale lock state from earlier versions; clear it and show the site
+        clearLockStorage();
+        hideLock();
+        return;
+      }
+      showLock(msg || 'Webseite wurde vorübergehend gesperrt', owner || 'CharlesCpr');
     } else {
       hideLock();
     }
@@ -209,10 +277,16 @@ window.unlockSite = function() {
   } catch (e) {}
   initLockFromStorage();
 };
-//set a lock by default for demonstration purposes
-localStorage.setItem('siteLocked','true');
-//unlock the site and reload to see the app
-//localStorage.setItem('siteLocked','false'); location.reload()
+
+window.clearLockStorage = function() {
+  try {
+    localStorage.removeItem('siteLocked');
+    localStorage.removeItem('siteLockMessage');
+    localStorage.removeItem('siteLockOwner');
+  } catch (e) {}
+  initLockFromStorage();
+};
+clearLockStorage();
 
 function showScreen(name) {
   Object.values(screens).forEach((screen) => screen.classList.remove("active"));
@@ -530,10 +604,27 @@ function formatIcsDate(date) {
 function finishExperience() {
   launchConfetti(120);
   launchHearts(42);
+  updateInviteResult();
   showScreen("final");
 }
 
-startBtn.addEventListener("click", () => showScreen("question"));
+startBtn.addEventListener("click", () => {
+  renderDateTypes();
+  showScreen("planner");
+});
+logoButton?.addEventListener("click", () => showScreen("start"));
+
+ratingStars.forEach((star) => {
+  star.addEventListener('click', () => setRating(Number(star.dataset.value)));
+});
+
+copyLinkBtn?.addEventListener('click', copyInviteLink);
+shareLinkBtn?.addEventListener('click', shareInviteLink);
+
+planBtn.addEventListener("click", () => {
+  renderDateTypes();
+  showScreen("planner");
+});
 
 yesBtn.addEventListener("click", () => {
   resetNoButton();
