@@ -152,6 +152,68 @@ const state = {
   answers: {}
 };
 
+// --- Site lock overlay support ---
+const lockOverlay = document.querySelector('#lockOverlay');
+const lockTitleEl = document.querySelector('#lockTitle');
+const lockMessageEl = document.querySelector('#lockMessage');
+const appShell = document.querySelector('.app-shell');
+
+function showLock(message = 'Webseite wurde vorübergehend gesperrt', owner = 'CharlesCpr') {
+  if (owner) {
+    lockMessageEl.textContent = `${message} durch den Owner "${owner}"`;
+  } else {
+    lockMessageEl.textContent = message;
+  }
+  lockOverlay.hidden = false;
+  // block interaction with the app
+  if (appShell) appShell.setAttribute('aria-hidden', 'true');
+  appShell.style.pointerEvents = 'none';
+  document.documentElement.style.overflow = 'hidden';
+}
+
+function hideLock() {
+  lockOverlay.hidden = true;
+  if (appShell) appShell.removeAttribute('aria-hidden');
+  appShell.style.pointerEvents = '';
+  document.documentElement.style.overflow = '';
+}
+
+function initLockFromStorage() {
+  try {
+    const locked = localStorage.getItem('siteLocked');
+    if (locked === 'true') {
+      const msg = localStorage.getItem('siteLockMessage') || 'Webseite wurde vorübergehend gesperrt';
+      const owner = localStorage.getItem('siteLockOwner') || 'CharlesCpr';
+      showLock(msg, owner);
+    } else {
+      hideLock();
+    }
+  } catch (e) {
+    // ignore storage errors
+  }
+}
+
+// Convenience functions to control from console or other scripts
+window.lockSite = function(message, owner) {
+  try {
+    localStorage.setItem('siteLocked', 'true');
+    if (message) localStorage.setItem('siteLockMessage', message);
+    if (owner) localStorage.setItem('siteLockOwner', owner);
+  } catch (e) {}
+  initLockFromStorage();
+};
+
+window.unlockSite = function() {
+  try {
+    localStorage.setItem('siteLocked', 'false');
+  } catch (e) {}
+  initLockFromStorage();
+};
+//set a lock by default for demonstration purposes
+localStorage.setItem('siteLocked','true');
+//unlock the site and reload to see the app
+//localStorage.setItem('siteLocked','false'); location.reload()
+
 function showScreen(name) {
   Object.values(screens).forEach((screen) => screen.classList.remove("active"));
   screens[name].classList.add("active");
@@ -524,5 +586,6 @@ calendarBtn.addEventListener("click", () => {
   setTimeout(finishExperience, 450);
 });
 
+initLockFromStorage();
 populateDayAndTimeSelects();
 renderDateTypes();
