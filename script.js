@@ -341,6 +341,43 @@ function renderSummary() {
     .join("");
 }
 
+function populateDayAndTimeSelects() {
+  const days = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
+
+  // Day select: add "Alle Tage" first, then the weekdays
+  daySelect.innerHTML = '';
+  const allDaysOption = document.createElement('option');
+  //allDaysOption.value = 'Alle Tage';
+ // allDaysOption.textContent = 'Alle Tage';
+  daySelect.appendChild(allDaysOption);
+
+  days.forEach((d) => {
+    const opt = document.createElement('option');
+    opt.value = d;
+    opt.textContent = d;
+    daySelect.appendChild(opt);
+  });
+
+  // Time select: add "Alle Stunden" then hours from 10:00 to 22:00
+  timeSelect.innerHTML = '';
+  const allHoursOption = document.createElement('option');
+  //allHoursOption.value = 'Alle Stunden';
+  //allHoursOption.textContent = 'Alle Stunden';
+  timeSelect.appendChild(allHoursOption);
+
+  for (let h = 10; h <= 22; h += 1) {
+    const opt = document.createElement('option');
+    const label = `${String(h).padStart(2, '0')}:00`;
+    opt.value = label;
+    opt.textContent = label;
+    timeSelect.appendChild(opt);
+  }
+
+  // Default preselection as requested: select the "Alle" options
+  daySelect.value = 'Samstag';
+  timeSelect.value = '10:00';
+}
+
 function buildDateText() {
   const answerText = readableAnswers()
     .map((answer) => `${answer.label}: ${answer.value}`)
@@ -400,8 +437,17 @@ function foldIcsLine(line, maxLength = 75) {
 
 function nextDateForDay(dayName, timeValue) {
   const days = ["Sonntag", "Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag"];
-  const targetDay = days.indexOf(dayName);
   const now = new Date();
+
+  // Support the special "Alle Tage" / "Alle Stunden" placeholders
+  if (dayName === "Alle Tage") {
+    dayName = days[now.getDay()];
+  }
+  if (timeValue === "Alle Stunden") {
+    timeValue = "19:00"; // sensible default when "all hours" is selected
+  }
+
+  const targetDay = days.indexOf(dayName);
   const [hours, minutes] = timeValue.split(":").map(Number);
   const candidate = new Date(now);
   candidate.setHours(hours, minutes, 0, 0);
@@ -478,4 +524,5 @@ calendarBtn.addEventListener("click", () => {
   setTimeout(finishExperience, 450);
 });
 
+populateDayAndTimeSelects();
 renderDateTypes();
