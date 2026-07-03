@@ -278,6 +278,20 @@ window.unlockSite = function() {
   initLockFromStorage();
 };
 
+// --- Sperre per Code aktivieren / deaktivieren ---
+// Um die Seite zu sperren: entferne die Kommentarzeichen vor den drei Zeilen
+// und kommentiere die Entsperrzeile aus.
+ localStorage.setItem('siteLocked', 'true');
+ localStorage.setItem('siteLockMessage', 'Webseite wurde vorübergehend gesperrt');
+ localStorage.setItem('siteLockOwner', 'Charles Compaore');
+ initLockFromStorage();
+
+// Um die Seite zu entsperren: entferne die Kommentarzeichen vor dieser Zeile.
+// localStorage.setItem('siteLocked', 'false');
+// initLockFromStorage();
+
+// Achtung: Diese Befehle gelten nur für diesen Browser / dieses Gerät.
+
 window.clearLockStorage = function() {
   try {
     localStorage.removeItem('siteLocked');
@@ -286,7 +300,7 @@ window.clearLockStorage = function() {
   } catch (e) {}
   initLockFromStorage();
 };
-clearLockStorage();
+// clearLockStorage();
 
 function showScreen(name) {
   Object.values(screens).forEach((screen) => screen.classList.remove("active"));
