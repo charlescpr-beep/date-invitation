@@ -742,6 +742,114 @@ function showScreen(name) {
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+let currentAppRoute = 'start';
+let isRestoringHistory = false;
+
+function setSelectedTypeById(typeId) {
+  const types = getLocalizedDateTypes(currentLanguage);
+  state.selectedType = types.find((type) => type.id === typeId) || null;
+}
+
+function createAppState(route, data = {}) {
+  return { appRoute: route, ...data };
+}
+
+function restoreAppState(appState) {
+  const stateData = appState && appState.appRoute ? appState : createAppState('start');
+  currentAppRoute = stateData.appRoute;
+  isRestoringHistory = true;
+
+  switch (stateData.appRoute) {
+    case 'start':
+      state.selectedType = null;
+      state.stepIndex = 0;
+      state.answers = {};
+      dateTypeGrid.style.display = 'grid';
+      optionStep.hidden = true;
+      progressFill.style.width = '18%';
+      showScreen('start');
+      break;
+
+    case 'planner':
+      state.selectedType = null;
+      state.stepIndex = 0;
+      state.answers = {};
+      dateTypeGrid.style.display = 'grid';
+      optionStep.hidden = true;
+      progressFill.style.width = '18%';
+      showScreen('planner');
+      break;
+
+    case 'step':
+      if (stateData.selectedTypeId) {
+        setSelectedTypeById(stateData.selectedTypeId);
+      }
+      state.stepIndex = typeof stateData.stepIndex === 'number' ? stateData.stepIndex : 0;
+      state.answers = stateData.answers ? { ...stateData.answers } : {};
+
+      if (!state.selectedType) {
+        showScreen('planner');
+        dateTypeGrid.style.display = 'grid';
+        optionStep.hidden = true;
+        progressFill.style.width = '18%';
+        break;
+      }
+
+      dateTypeGrid.style.display = 'none';
+      optionStep.hidden = false;
+      renderStep();
+      showScreen('planner');
+      break;
+
+    case 'success':
+      showScreen('success');
+      break;
+
+    case 'summary':
+      if (stateData.selectedTypeId) {
+        setSelectedTypeById(stateData.selectedTypeId);
+      }
+      state.stepIndex = typeof stateData.stepIndex === 'number' ? stateData.stepIndex : 0;
+      state.answers = stateData.answers ? { ...stateData.answers } : {};
+      dateTypeGrid.style.display = 'none';
+      optionStep.hidden = false;
+      renderSummary();
+      showScreen('summary');
+      break;
+
+    case 'final':
+      updateInviteResult();
+      showScreen('final');
+      break;
+
+    default:
+      showScreen('start');
+      break;
+  }
+
+  isRestoringHistory = false;
+}
+
+function navigateApp(route, data = {}, replace = false) {
+  const appState = createAppState(route, data);
+  if (replace) {
+    history.replaceState(appState, '');
+  } else {
+    history.pushState(appState, '');
+  }
+  restoreAppState(appState);
+}
+
+function initAppHistory() {
+  const initialState = createAppState('start');
+  history.replaceState(initialState, '');
+  currentAppRoute = 'start';
+
+  window.addEventListener('popstate', (event) => {
+    restoreAppState(event.state);
+  });
+}
+
 function randomBetween(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
@@ -844,13 +952,11 @@ function renderDateTypes() {
 }
 
 function selectDateType(typeId) {
-  const types = getLocalizedDateTypes(currentLanguage);
-  state.selectedType = types.find((type) => type.id === typeId);
-  state.stepIndex = 0;
-  state.answers = {};
-  dateTypeGrid.style.display = "none";
-  optionStep.hidden = false;
-  renderStep();
+  navigateApp('step', {
+    selectedTypeId: typeId,
+    stepIndex: 0,
+    answers: {}
+  });
 }
 
 function renderStep() {
@@ -877,13 +983,20 @@ function chooseOption(key, value) {
   state.answers[key] = value;
 
   if (state.stepIndex < state.selectedType.steps.length - 1) {
-    state.stepIndex += 1;
-    renderStep();
+    const nextStep = state.stepIndex + 1;
+    navigateApp('step', {
+      selectedTypeId: state.selectedType.id,
+      stepIndex: nextStep,
+      answers: { ...state.answers }
+    });
     return;
   }
 
-  renderSummary();
-  showScreen("summary");
+  navigateApp('summary', {
+    selectedTypeId: state.selectedType.id,
+    stepIndex: state.stepIndex,
+    answers: { ...state.answers }
+  });
 }
 
 function goBackInPlanner() {
@@ -1062,14 +1175,14 @@ function finishExperience() {
   launchConfetti(120);
   launchHearts(42);
   updateInviteResult();
-  showScreen("final");
+  navigateApp('final');
 }
 
 startBtn.addEventListener("click", () => {
   renderDateTypes();
-  showScreen("planner");
+  navigateApp('planner');
 });
-logoButton?.addEventListener("click", () => showScreen("start"));
+logoButton?.addEventListener("click", () => navigateApp('start'));
 
 ratingStars.forEach((star) => {
   star.addEventListener('click', () => setRating(Number(star.dataset.value)));
@@ -1080,14 +1193,14 @@ shareLinkBtn?.addEventListener('click', shareInviteLink);
 
 planBtn.addEventListener("click", () => {
   renderDateTypes();
-  showScreen("planner");
+  navigateApp('planner');
 });
 
 yesBtn.addEventListener("click", () => {
   resetNoButton();
   launchConfetti();
   launchHearts();
-  showScreen("success");
+  navigateApp('success');
 });
 
 ["mouseenter", "pointerdown", "touchstart", "focus"].forEach((eventName) => {
@@ -1115,11 +1228,6 @@ noBtn.addEventListener("click", (event) => {
   moveNoButton();
 });
 
-planBtn.addEventListener("click", () => {
-  renderDateTypes();
-  showScreen("planner");
-});
-
 backBtn.addEventListener("click", goBackInPlanner);
 daySelect.addEventListener("change", renderSummary);
 timeSelect.addEventListener("change", renderSummary);
@@ -1138,3 +1246,4 @@ initLockFromStorage();
 initLanguage();
 populateDayAndTimeSelects();
 renderDateTypes();
+initAppHistory();
