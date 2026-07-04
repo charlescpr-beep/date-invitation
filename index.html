@@ -23,6 +23,14 @@
       <img src="logo1.png" alt="Logo Oui ou Oui" class="logo-image" />
       <span class="logo-text"><strong>Oui ou Oui</strong> <span aria-hidden="true">❤️</span></span>
     </button>
+    <div class="lang-switcher">
+      <label for="langSelect" class="sr-only">Sprache wählen</label>
+      <select id="langSelect" aria-label="Sprache wählen">
+        <option value="de">DE</option>
+        <option value="en">EN</option>
+        <option value="fr">FR</option>
+      </select>
+    </div>
   </header>
   <div class="ambient ambient-one"></div>
   <div class="ambient ambient-two"></div>
@@ -31,14 +39,14 @@
   <main class="app-shell">
     <section class="screen active" id="startScreen" aria-labelledby="startTitle">
       <div class="glass-panel intro-panel reveal hero-panel">
-        <p class="eyebrow">Bienvenue</p>
+        <p class="eyebrow" id="heroEyebrow">Bienvenue</p>
         <h1 id="startTitle">Oui ou Oui <span aria-hidden="true">❤️</span></h1>
-        <p class="hero-slogan">Weil das Nein heute leider keine Option ist. 😉</p>
+        <p class="hero-slogan" id="heroSlogan">Weil das Nein heute leider keine Option ist. 😉</p>
         <button class="primary-btn hero-btn" id="startBtn" type="button">
-          <span>❤️ Einladung erstellen</span>
+          <span id="startButtonText">❤️ Einladung erstellen</span>
         </button>
         <div class="rating-card">
-          <span class="rating-label">Bewerte uns</span>
+          <span class="rating-label" id="ratingLabel">Bewerte uns</span>
           <div class="rating-stars" id="ratingStars">
             <button type="button" class="star-btn" data-value="1" aria-label="1 Stern">★</button>
             <button type="button" class="star-btn" data-value="2" aria-label="2 Sterne">★</button>
@@ -53,7 +61,7 @@
 
     <section class="screen" id="questionScreen" aria-labelledby="questionTitle">
       <div class="glass-panel question-panel">
-        <p class="eyebrow">Eine sehr wichtige Frage</p>
+        <p class="eyebrow" id="questionEyebrow">Eine sehr wichtige Frage</p>
         <h2 id="questionTitle">Möchtest du mit mir auf ein Date gehen?</h2>
         <p class="tease-message" id="teaseMessage" aria-live="polite"></p>
         <div class="answer-area" id="answerArea">
@@ -67,10 +75,10 @@
       <div class="glass-panel success-panel">
         <div class="success-icon" aria-hidden="true">🥳</div>
         <h2 id="successTitle">Yeeeees!!</h2>
-        <p>Jetzt planen wir unser Date ❤️</p>
+        <p id="successCopy">Jetzt planen wir unser Date ❤️</p>
         <button class="primary-btn" id="planBtn" type="button">
           <i class="fa-solid fa-heart"></i>
-          Date planen
+          <span id="planButtonText">Date planen</span>
         </button>
       </div>
     </section>
@@ -78,7 +86,7 @@
     <section class="screen flow-screen" id="plannerScreen" aria-labelledby="plannerTitle">
       <div class="planner">
         <div class="planner-head reveal">
-          <p class="eyebrow">Date-Konfigurator</p>
+          <p class="eyebrow" id="plannerEyebrow">Date-Konfigurator</p>
           <h2 id="plannerTitle">Worauf hast du Lust?</h2>
           <div class="progress-bar" aria-hidden="true">
             <span id="progressFill"></span>
@@ -98,37 +106,26 @@
 
     <section class="screen" id="summaryScreen" aria-labelledby="summaryTitle">
       <div class="glass-panel summary-panel">
-        <p class="eyebrow">Fast fertig</p>
+        <p class="eyebrow" id="summaryEyebrow">Fast fertig</p>
         <h2 id="summaryTitle">❤️ Unser Date</h2>
         <div class="summary-list" id="summaryList"></div>
         <div class="date-picks">
-          <label>
+          <label for="daySelect">
             <span>📅 Tag</span>
-            <select id="daySelect">
-              <option>Samstag</option>
-              <option>Freitag</option>
-              <option>Sonntag</option>
-              <option>Donnerstag</option>
-            </select>
+            <select id="daySelect"></select>
           </label>
-          <label>
+          <label for="timeSelect">
             <span>🕖 Uhrzeit</span>
-            <select id="timeSelect">
-              <option>19:00</option>
-              <option>18:00</option>
-              <option>20:00</option>
-              <option>16:00</option>
-              <option>14:00</option>
-            </select>
+            <select id="timeSelect"></select>
           </label>
         </div>
         <button class="primary-btn wide-btn" id="confirmBtn" type="button">
           <i class="fa-brands fa-whatsapp"></i>
-          Termin bestätigen
+          <span id="confirmButtonText">Termin bestätigen</span>
         </button>
         <button class="calendar-btn" id="calendarBtn" type="button">
           <i class="fa-regular fa-calendar-plus"></i>
-          Zum Kalender hinzufügen
+          <span id="calendarButtonText">Zum Kalender hinzufügen</span>
         </button>
       </div>
     </section>
@@ -137,7 +134,7 @@
       <div class="glass-panel final-panel invite-result">
         <div class="result-badge" aria-hidden="true">🎉</div>
         <h2 id="finalTitle">Deine Einladung ist fertig!</h2>
-        <p class="result-copy">Teile deinen Link oder zeige den QR-Code vor.</p>
+        <p class="result-copy" id="resultCopy">Teile deinen Link oder zeige den QR-Code vor.</p>
         <div class="share-panel">
           <div class="invite-link-card">
             <label for="inviteLink">Einladungslink</label>
