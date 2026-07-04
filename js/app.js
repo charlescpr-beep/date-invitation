@@ -1,3 +1,4 @@
+import { inject } from '@vercel/analytics';
 import { initNoButton, launchConfetti, launchHearts, resetNoButton } from "./animations.js";
 import { downloadCalendarFile } from "./calendar.js";
 import { initInviteActions, updateInviteResult } from "./invite.js";
@@ -54,6 +55,9 @@ function initEventListeners() {
 }
 
 function initApp() {
+  // Initialize Vercel Analytics
+  inject();
+  
   initLockControls();
   initPlanner();
   initRating();
